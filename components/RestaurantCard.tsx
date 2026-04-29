@@ -236,7 +236,11 @@ export default function RestaurantCard({
 
       {/* 住所・営業時間 */}
       <div className="text-[11px] text-sumi-500 space-y-0.5 mb-2">
-        <p>{restaurant.address}</p>
+        <p>
+          {distanceStr
+            ? <span className="text-forest-700 font-medium">📍 現在地から {distanceStr}</span>
+            : restaurant.address}
+        </p>
         <p>{restaurant.openingHours}</p>
       </div>
 
