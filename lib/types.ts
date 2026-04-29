@@ -69,6 +69,7 @@ export interface Filters {
   preferLowFried: boolean;
   openNow: boolean;
   sortByDistance: boolean;
+  maxDistanceMeters: number | null;
 }
 
 export interface UserLocation {

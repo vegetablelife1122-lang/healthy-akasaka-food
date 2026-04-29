@@ -64,6 +64,7 @@ const DEFAULT_FILTERS: Filters = {
   preferLowFried: false,
   openNow: false,
   sortByDistance: false,
+  maxDistanceMeters: null,
 };
 
 export default function HomePage() {
@@ -112,6 +113,12 @@ export default function HomePage() {
 
   const handleSubmit = () => {
     let ranked = rankRestaurants(restaurants, filters);
+    if (userLocation && filters.maxDistanceMeters !== null) {
+      ranked = ranked.filter((r) => {
+        const c = getRestaurantCoords(r.restaurant);
+        return distanceMeters(userLocation.lat, userLocation.lng, c.lat, c.lng) <= filters.maxDistanceMeters!;
+      });
+    }
     if (filters.sortByDistance && userLocation) {
       ranked = [...ranked].sort((a, b) => {
         const ca = getRestaurantCoords(a.restaurant);
@@ -268,7 +275,7 @@ export default function HomePage() {
 
         {/* Filter form */}
         <section>
-          <FilterForm filters={filters} onChange={setFilters} onSubmit={handleSubmit} />
+          <FilterForm filters={filters} onChange={setFilters} onSubmit={handleSubmit} hasLocation={!!userLocation} />
           {/* 現在地ボタン */}
           <div className="mt-3 flex flex-col items-center gap-1">
             <button

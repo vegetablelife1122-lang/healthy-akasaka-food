@@ -7,6 +7,7 @@ interface FilterFormProps {
   filters: Filters;
   onChange: (filters: Filters) => void;
   onSubmit: () => void;
+  hasLocation?: boolean;
 }
 
 const HEALTH_OPTIONS = [
@@ -16,7 +17,9 @@ const HEALTH_OPTIONS = [
   { key: "preferLowFried" as const, label: "揚げ物少なめ" },
 ];
 
-export default function FilterForm({ filters, onChange, onSubmit }: FilterFormProps) {
+const DISTANCE_PRESETS = [300, 500, 800, 1000, 1500];
+
+export default function FilterForm({ filters, onChange, onSubmit, hasLocation = false }: FilterFormProps) {
   const update = <K extends keyof Filters>(key: K, value: Filters[K]) => {
     onChange({ ...filters, [key]: value });
   };
@@ -249,6 +252,52 @@ export default function FilterForm({ filters, onChange, onSubmit }: FilterFormPr
             />
           )}
         </div>
+
+        {/* Distance filter（現在地取得済みの時だけ表示） */}
+        {hasLocation && (
+          <div>
+            <div className="flex items-baseline gap-2 mb-2">
+              <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500">Distance · 現在地からの距離</div>
+              {filters.maxDistanceMeters !== null && (
+                <span className="text-forest-800 font-medium text-sm">
+                  {filters.maxDistanceMeters >= 1000
+                    ? `${(filters.maxDistanceMeters / 1000).toFixed(1)}km`
+                    : `${filters.maxDistanceMeters}m`} 以内
+                </span>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              <button
+                type="button"
+                onClick={() => update("maxDistanceMeters", null)}
+                className={`chip chip-sm ${filters.maxDistanceMeters === null ? "chip-active" : ""}`}
+              >
+                指定なし
+              </button>
+              {DISTANCE_PRESETS.map((d) => (
+                <button
+                  type="button"
+                  key={d}
+                  onClick={() => update("maxDistanceMeters", d)}
+                  className={`chip chip-sm ${filters.maxDistanceMeters === d ? "chip-active" : ""}`}
+                >
+                  {d >= 1000 ? `${d / 1000}km` : `${d}m`}
+                </button>
+              ))}
+            </div>
+            {filters.maxDistanceMeters !== null && (
+              <input
+                type="range"
+                min={100}
+                max={2000}
+                step={50}
+                value={filters.maxDistanceMeters}
+                onChange={(e) => update("maxDistanceMeters", Number(e.target.value))}
+                className="w-full accent-forest-700"
+              />
+            )}
+          </div>
+        )}
 
         {/* Open now toggle */}
         <div>
