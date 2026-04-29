@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#065f46",
+  themeColor: "#0d2e22",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -30,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className="bg-[#f2f8f3] text-gray-800">
+      <body className="text-sumi-900">
         {children}
         <script
           dangerouslySetInnerHTML={{

@@ -9,6 +9,13 @@ interface FilterFormProps {
   onSubmit: () => void;
 }
 
+const HEALTH_OPTIONS = [
+  { key: "preferHealthy" as const, label: "ヘルシー全般" },
+  { key: "preferHighProtein" as const, label: "高たんぱく" },
+  { key: "preferVegetable" as const, label: "野菜多め" },
+  { key: "preferLowFried" as const, label: "揚げ物少なめ" },
+];
+
 export default function FilterForm({ filters, onChange, onSubmit }: FilterFormProps) {
   const update = <K extends keyof Filters>(key: K, value: Filters[K]) => {
     onChange({ ...filters, [key]: value });
@@ -19,122 +26,167 @@ export default function FilterForm({ filters, onChange, onSubmit }: FilterFormPr
     onSubmit();
   };
 
+  // active 判定をスマートに書きやすくする
+  const isActive = <T extends string>(current: T | "", value: T) => current === value;
+
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-md overflow-hidden">
-      {/* ヘッダーストリップ */}
-      <div className="bg-emerald-700 px-6 py-3 flex items-center gap-2">
-        <span className="text-emerald-200 text-base">🌿</span>
-        <p className="text-emerald-100 text-xs font-bold tracking-[0.2em] uppercase">条件を選ぶ</p>
+    <form onSubmit={handleSubmit} className="paper rounded-2xl border border-ivory-200 shadow-sm overflow-hidden">
+      {/* ヘッダー */}
+      <div className="px-6 pt-6 pb-3 flex items-end justify-between">
+        <div>
+          <div className="section-label">FILTERS</div>
+          <h3 className="font-mincho text-lg mt-1 text-forest-900">条件を選ぶ</h3>
+        </div>
       </div>
+      <div className="gold-rule mx-6" />
 
       <div className="p-6 space-y-6">
         {/* Name search */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            店名で探す
-          </label>
+          <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500 mb-2">
+            Name · 店名で探す
+          </div>
           <input
             type="text"
             value={filters.name}
             onChange={(e) => update("name", e.target.value)}
-            placeholder="例：テーブル、焼鳥..."
-            className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-gray-50 placeholder-gray-400"
+            placeholder="例：山ぶき、焼鳥..."
+            className="w-full bg-ivory-100 border border-ivory-200 rounded-lg px-4 py-2.5 text-sm font-mincho focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-gold-500 placeholder:text-sumi-500/60"
           />
         </div>
 
-        {/* Area and Visit Type */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">エリア</label>
-            <select
-              value={filters.area}
-              onChange={(e) => update("area", e.target.value as Area | "")}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-gray-50"
-            >
-              <option value="">未指定</option>
-              {AREAS.map((a) => (
-                <option key={a} value={a}>{a}</option>
-              ))}
-            </select>
+        {/* Area chips */}
+        <div>
+          <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500 mb-2">
+            Area · エリア
           </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">シーン</label>
-            <select
-              value={filters.visitType}
-              onChange={(e) => update("visitType", e.target.value as VisitType | "")}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-gray-50"
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => update("area", "")}
+              className={`chip ${filters.area === "" ? "chip-active" : ""}`}
             >
-              <option value="">未指定</option>
-              {VISIT_TYPES.map((v) => (
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
+              すべて
+            </button>
+            {AREAS.map((a) => (
+              <button
+                type="button"
+                key={a}
+                onClick={() => update("area", a as Area)}
+                className={`chip ${isActive(filters.area, a) ? "chip-active" : ""}`}
+              >
+                {a}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Genre and Drink */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">ジャンル</label>
-            <select
-              value={filters.genre}
-              onChange={(e) => update("genre", e.target.value as Genre | "")}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-gray-50"
-            >
-              <option value="">未指定</option>
-              {GENRES.map((g) => (
-                <option key={g} value={g}>{g}</option>
-              ))}
-            </select>
+        {/* Scene chips */}
+        <div>
+          <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500 mb-2">
+            Scene · シーン
           </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">飲みたいもの</label>
-            <select
-              value={filters.drink}
-              onChange={(e) => update("drink", e.target.value as Drink | "")}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-gray-50"
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => update("visitType", "")}
+              className={`chip ${filters.visitType === "" ? "chip-active" : ""}`}
             >
-              <option value="">未指定</option>
-              {DRINKS.map((d) => (
-                <option key={d} value={d}>{d}</option>
-              ))}
-            </select>
+              すべて
+            </button>
+            {VISIT_TYPES.map((v) => (
+              <button
+                type="button"
+                key={v}
+                onClick={() => update("visitType", v as VisitType)}
+                className={`chip ${isActive(filters.visitType, v) ? "chip-active" : ""}`}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Genre chips */}
+        <div>
+          <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500 mb-2">
+            Genre · 料理ジャンル
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => update("genre", "")}
+              className={`chip ${filters.genre === "" ? "chip-active" : ""}`}
+            >
+              すべて
+            </button>
+            {GENRES.map((g) => (
+              <button
+                type="button"
+                key={g}
+                onClick={() => update("genre", g as Genre)}
+                className={`chip ${isActive(filters.genre, g) ? "chip-active" : ""}`}
+              >
+                {g}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Drink chips */}
+        <div>
+          <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500 mb-2">
+            Drink · 飲みたいもの
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => update("drink", "")}
+              className={`chip ${filters.drink === "" ? "chip-active" : ""}`}
+            >
+              指定なし
+            </button>
+            {DRINKS.map((d) => (
+              <button
+                type="button"
+                key={d}
+                onClick={() => update("drink", d as Drink)}
+                className={`chip ${isActive(filters.drink, d) ? "chip-active" : ""}`}
+              >
+                {d}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Calories */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            カロリー上限
-            {filters.visitType === "ランチ" && <span className="ml-1 text-xs text-emerald-600 font-normal">（ランチ換算で判定）</span>}
-            {filters.maxCalories !== null && (
-              <span className="ml-2 text-emerald-700 font-bold">{filters.maxCalories} kcal 以下</span>
-            )}
-          </label>
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500">
+              Calorie · カロリー上限
+              {filters.visitType === "ランチ" && (
+                <span className="ml-2 normal-case tracking-normal text-[10px] text-gold-600">（ランチ換算）</span>
+              )}
+            </div>
+            <span className="font-cormorant text-base text-forest-900">
+              {filters.maxCalories !== null ? `${filters.maxCalories}` : "—"}{" "}
+              <span className="text-[10px] tracking-widest text-sumi-500">kcal</span>
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mb-3">
             <button
               type="button"
               onClick={() => update("maxCalories", null)}
-              className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-                filters.maxCalories === null
-                  ? "bg-emerald-700 text-white border-emerald-700"
-                  : "bg-white text-gray-500 border-gray-200 hover:border-emerald-500"
-              }`}
+              className={`chip chip-sm ${filters.maxCalories === null ? "chip-active" : ""}`}
             >
-              未指定
+              指定なし
             </button>
             {CALORIE_PRESETS.map((cal) => (
               <button
                 type="button"
                 key={cal}
                 onClick={() => update("maxCalories", cal)}
-                className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-                  filters.maxCalories === cal
-                    ? "bg-emerald-700 text-white border-emerald-700"
-                    : "bg-white text-gray-500 border-gray-200 hover:border-emerald-500"
-                }`}
+                className={`chip chip-sm ${filters.maxCalories === cal ? "chip-active" : ""}`}
               >
                 {cal}
               </button>
@@ -148,42 +200,38 @@ export default function FilterForm({ filters, onChange, onSubmit }: FilterFormPr
               step={50}
               value={filters.maxCalories}
               onChange={(e) => update("maxCalories", Number(e.target.value))}
-              className="w-full accent-emerald-700"
+              className="akasaka-slider"
             />
           )}
         </div>
 
         {/* Budget */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            予算上限
-            {filters.visitType === "ランチ" && <span className="ml-1 text-xs text-emerald-600 font-normal">（ランチ価格で判定）</span>}
-            {filters.maxBudget !== null && (
-              <span className="ml-2 text-emerald-700 font-bold">¥{filters.maxBudget.toLocaleString()} 以下</span>
-            )}
-          </label>
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500">
+              Budget · 予算上限
+              {filters.visitType === "ランチ" && (
+                <span className="ml-2 normal-case tracking-normal text-[10px] text-gold-600">（ランチ価格）</span>
+              )}
+            </div>
+            <span className="font-cormorant text-base text-forest-900">
+              {filters.maxBudget !== null ? `¥${filters.maxBudget.toLocaleString()}` : "—"}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5 mb-3">
             <button
               type="button"
               onClick={() => update("maxBudget", null)}
-              className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-                filters.maxBudget === null
-                  ? "bg-emerald-700 text-white border-emerald-700"
-                  : "bg-white text-gray-500 border-gray-200 hover:border-emerald-500"
-              }`}
+              className={`chip chip-sm ${filters.maxBudget === null ? "chip-active" : ""}`}
             >
-              未指定
+              指定なし
             </button>
             {BUDGET_PRESETS.map((b) => (
               <button
                 type="button"
                 key={b}
                 onClick={() => update("maxBudget", b)}
-                className={`px-3 py-1 rounded-full text-sm font-medium border transition-colors ${
-                  filters.maxBudget === b
-                    ? "bg-emerald-700 text-white border-emerald-700"
-                    : "bg-white text-gray-500 border-gray-200 hover:border-emerald-500"
-                }`}
+                className={`chip chip-sm ${filters.maxBudget === b ? "chip-active" : ""}`}
               >
                 ¥{b.toLocaleString()}
               </button>
@@ -197,14 +245,18 @@ export default function FilterForm({ filters, onChange, onSubmit }: FilterFormPr
               step={500}
               value={filters.maxBudget}
               onChange={(e) => update("maxBudget", Number(e.target.value))}
-              className="w-full accent-emerald-700"
+              className="akasaka-slider"
             />
           )}
         </div>
 
-        {/* Open now */}
+        {/* Open now toggle */}
         <div>
-          <label className="flex items-center gap-3 cursor-pointer group">
+          <label className="flex items-center justify-between cursor-pointer group">
+            <div>
+              <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500">Open · 営業状況</div>
+              <div className="font-mincho text-sm mt-0.5 text-forest-900 group-hover:text-gold-600">今、営業している店だけ</div>
+            </div>
             <div className="relative">
               <input
                 type="checkbox"
@@ -212,45 +264,43 @@ export default function FilterForm({ filters, onChange, onSubmit }: FilterFormPr
                 onChange={(e) => update("openNow", e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-emerald-600 transition-colors" />
-              <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5" />
+              <div className="w-12 h-7 bg-ivory-200 rounded-full peer peer-checked:bg-forest-700 transition-colors border border-ivory-200" />
+              <div className="absolute top-0.5 left-0.5 w-6 h-6 bg-ivory-50 rounded-full shadow transition-transform peer-checked:translate-x-5 border border-gold-500/30" />
             </div>
-            <span className="text-sm font-semibold text-gray-700 group-hover:text-emerald-700">
-              🕐 今営業中
-            </span>
           </label>
         </div>
 
-        {/* Health preferences */}
+        {/* Health preferences (gold chips) */}
         <div>
-          <p className="text-sm font-semibold text-gray-700 mb-2">健康志向の条件</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { key: "preferHealthy" as const, label: "ヘルシー全般" },
-              { key: "preferHighProtein" as const, label: "高たんぱく" },
-              { key: "preferVegetable" as const, label: "野菜多め" },
-              { key: "preferLowFried" as const, label: "揚げ物少なめ" },
-            ].map(({ key, label }) => (
-              <label key={key} className="flex items-center gap-2 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={filters[key] as boolean}
-                  onChange={(e) => update(key, e.target.checked)}
-                  className="w-4 h-4 accent-emerald-600 cursor-pointer"
-                />
-                <span className="text-sm text-gray-600 group-hover:text-emerald-700">{label}</span>
-              </label>
-            ))}
+          <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500 mb-2">
+            Health · 健康志向
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {HEALTH_OPTIONS.map(({ key, label }) => {
+              const checked = filters[key];
+              return (
+                <button
+                  type="button"
+                  key={key}
+                  onClick={() => update(key, !checked)}
+                  className={`chip ${checked ? "chip-gold" : ""}`}
+                >
+                  {checked ? "✓" : ""} {label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-xl text-base transition-all shadow hover:shadow-md tracking-wide flex items-center justify-center gap-2"
+          className="decide-btn w-full py-3.5 px-6 rounded-xl font-mincho text-base tracking-widest"
         >
-          <span>候補を見る</span>
-          <span className="text-sm opacity-70">→</span>
+          候補を見る
+          <span className="block text-[10px] font-cormorant italic mt-0.5 text-gold-400 tracking-[0.3em]">
+            VIEW CANDIDATES
+          </span>
         </button>
       </div>
     </form>

@@ -1,5 +1,52 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="38.400000000000006" fill="#065f46"/>
-  <text x="50%" y="38%" text-anchor="middle" dominant-baseline="central" font-size="67.19999999999999" fill="white">🥗</text>
-  <text x="50%" y="72%" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-weight="bold" font-size="24.96" fill="white">赤坂</text>
+  <defs>
+    <clipPath id="round192"><rect width="192" height="192" rx="38"/></clipPath>
+    <linearGradient id="overlay192" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#0d2e22" stop-opacity="0.25"/>
+      <stop offset="55%" stop-color="#0d2e22" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#0d2e22" stop-opacity="0.92"/>
+    </linearGradient>
+    <linearGradient id="mizu192" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"  stop-color="#c9a656" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#c9a656" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#c9a656" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#round192)">
+    <!-- 背景写真 -->
+    <image
+      href="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&amp;fit=crop&amp;w=384&amp;h=384&amp;q=85"
+      width="192" height="192" preserveAspectRatio="xMidYMid slice"/>
+    <!-- 深緑グラデーション -->
+    <rect width="192" height="192" fill="url(#overlay192)"/>
+
+    <!-- 金L字フレーム -->
+    <g stroke="#c9a656" stroke-width="2" fill="none" stroke-linecap="square" opacity="0.85">
+      <path d="M 26 44 L 26 26 L 44 26"/>
+      <path d="M 148 26 L 166 26 L 166 44"/>
+      <path d="M 26 148 L 26 166 L 44 166"/>
+      <path d="M 148 166 L 166 166 L 166 148"/>
+    </g>
+
+    <!-- 「赤坂」明朝・アイボリー -->
+    <text x="96" y="86" text-anchor="middle" dominant-baseline="central"
+      font-family="'Shippori Mincho B1','Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif"
+      font-size="58" font-weight="500" fill="#faf6ec"
+      style="paint-order:stroke; stroke:rgba(0,0,0,0.4); stroke-width:0.5px;">赤坂</text>
+
+    <!-- 水引き -->
+    <rect x="83" y="125" width="26" height="2.5" rx="1.25" fill="url(#mizu192)"/>
+
+    <!-- 外食決定機 -->
+    <text x="96" y="142" text-anchor="middle" dominant-baseline="central"
+      font-family="'Shippori Mincho B1','Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif"
+      font-size="14" font-weight="500" fill="#faf6ec" letter-spacing="3"
+      style="paint-order:stroke; stroke:rgba(0,0,0,0.4); stroke-width:0.4px;">外食決定機</text>
+
+    <!-- AKASAKA -->
+    <text x="96" y="160" text-anchor="middle" dominant-baseline="central"
+      font-family="'Cormorant Garamond','Georgia',serif"
+      font-size="10" font-weight="500" fill="#d8be7a" font-style="italic"
+      letter-spacing="3">AKASAKA</text>
+  </g>
 </svg>

@@ -1,5 +1,58 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="102.4" fill="#065f46"/>
-  <text x="50%" y="38%" text-anchor="middle" dominant-baseline="central" font-size="179.2" fill="white">🥗</text>
-  <text x="50%" y="72%" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-weight="bold" font-size="66.56" fill="white">赤坂</text>
+  <defs>
+    <clipPath id="round512"><rect width="512" height="512" rx="102"/></clipPath>
+    <linearGradient id="overlay512" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#0d2e22" stop-opacity="0.2"/>
+      <stop offset="55%" stop-color="#0d2e22" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0d2e22" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="mizu" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"  stop-color="#c9a656" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#c9a656" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#c9a656" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#round512)">
+    <!-- 背景写真 -->
+    <image
+      href="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&amp;fit=crop&amp;w=1024&amp;h=1024&amp;q=85"
+      width="512" height="512" preserveAspectRatio="xMidYMid slice"/>
+    <!-- 深緑グラデーション -->
+    <rect width="512" height="512" fill="url(#overlay512)"/>
+
+    <!-- 金L字フレーム -->
+    <g stroke="#c9a656" stroke-width="3.5" fill="none" stroke-linecap="square" opacity="0.85">
+      <path d="M 70 118 L 70 70 L 118 70"/>
+      <path d="M 394 70 L 442 70 L 442 118"/>
+      <path d="M 70 394 L 70 442 L 118 442"/>
+      <path d="M 394 442 L 442 442 L 442 394"/>
+    </g>
+
+    <!-- 上の小ラベル -->
+    <text x="256" y="118" text-anchor="middle" dominant-baseline="central"
+      font-family="'Cormorant Garamond','Georgia',serif"
+      font-size="14" font-weight="500" fill="#d8be7a" font-style="italic"
+      letter-spacing="6" opacity="0.9">TONIGHT&apos;S CHOICE</text>
+
+    <!-- 「赤坂」 -->
+    <text x="256" y="258" text-anchor="middle" dominant-baseline="central"
+      font-family="'Shippori Mincho B1','Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif"
+      font-size="172" font-weight="500" fill="#faf6ec"
+      style="paint-order:stroke; stroke:rgba(0,0,0,0.35); stroke-width:1px;">赤坂</text>
+
+    <!-- 水引き -->
+    <rect x="232" y="358" width="48" height="4" rx="2" fill="url(#mizu)"/>
+
+    <!-- 外食決定機 -->
+    <text x="256" y="390" text-anchor="middle" dominant-baseline="central"
+      font-family="'Shippori Mincho B1','Noto Serif JP','Yu Mincho','Hiragino Mincho ProN',serif"
+      font-size="26" font-weight="500" fill="#faf6ec" letter-spacing="6"
+      style="paint-order:stroke; stroke:rgba(0,0,0,0.4); stroke-width:0.7px;">外食決定機</text>
+
+    <!-- AKASAKA -->
+    <text x="256" y="432" text-anchor="middle" dominant-baseline="central"
+      font-family="'Cormorant Garamond','Georgia',serif"
+      font-size="20" font-weight="500" fill="#d8be7a" font-style="italic"
+      letter-spacing="6">AKASAKA</text>
+  </g>
 </svg>

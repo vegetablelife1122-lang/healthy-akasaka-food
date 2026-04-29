@@ -4,8 +4,8 @@
   "description": "健康を気にする人のための赤坂外食決定機",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#065f46",
+  "background_color": "#faf6ec",
+  "theme_color": "#0d2e22",
   "icons": [
     {
       "src": "/icon-192.svg",

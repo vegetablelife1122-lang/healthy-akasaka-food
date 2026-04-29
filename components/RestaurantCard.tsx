@@ -9,67 +9,91 @@ interface RestaurantCardProps {
   onToggleFavorite?: (id: string) => void;
 }
 
-const HEALTH_TAG_COLORS: Record<string, string> = {
-  "野菜多め": "bg-green-100 text-green-700",
-  "高たんぱく": "bg-blue-100 text-blue-700",
-  "揚げ物少なめ": "bg-yellow-100 text-yellow-700",
-  "軽め": "bg-purple-100 text-purple-700",
-  "低カロリー": "bg-teal-100 text-teal-700",
-  "魚介系": "bg-cyan-100 text-cyan-700",
-  "発酵食品": "bg-orange-100 text-orange-700",
+const HEALTH_TAG_BG: Record<string, string> = {
+  "野菜多め":     "bg-forest-700/10 text-forest-800 border-forest-700/30",
+  "高たんぱく":   "bg-gold-500/10 text-gold-700 border-gold-500/30",
+  "揚げ物少なめ": "bg-emerald-500/10 text-forest-700 border-forest-500/30",
+  "軽め":         "bg-ivory-100 text-sumi-700 border-ivory-200",
+  "低カロリー":   "bg-forest-500/10 text-forest-700 border-forest-500/30",
+  "魚介系":       "bg-forest-400/10 text-forest-700 border-forest-400/30",
+  "発酵食品":     "bg-shu-500/10 text-shu-500 border-shu-500/30",
+  "肉料理充実":   "bg-shu-500/10 text-shu-500 border-shu-500/30",
+  "こだわり食材": "bg-gold-500/10 text-gold-700 border-gold-500/30",
+  "揚げ物あり":   "bg-sumi-500/10 text-sumi-700 border-sumi-500/30",
 };
 
 const VISIT_TYPE_COLORS: Record<string, string> = {
-  "ランチ": "bg-amber-100 text-amber-700",
-  "ディナー": "bg-indigo-100 text-indigo-700",
-  "軽く飲む": "bg-pink-100 text-pink-700",
-  "お酒メイン": "bg-red-100 text-red-700",
+  "ランチ":     "bg-gold-500/10 text-gold-700 border-gold-500/30",
+  "ディナー":   "bg-forest-700/10 text-forest-800 border-forest-700/30",
+  "軽く飲む":   "bg-ivory-100 text-sumi-700 border-ivory-200",
+  "お酒メイン": "bg-shu-500/10 text-shu-500 border-shu-500/30",
 };
 
-function getRankBadgeStyle(rank: number): string {
-  if (rank === 1) return "bg-amber-500 text-white shadow-sm ring-2 ring-amber-300 ring-offset-1";
-  if (rank === 2) return "bg-slate-400 text-white shadow-sm";
-  if (rank === 3) return "bg-orange-500 text-white shadow-sm";
-  return "bg-emerald-700 text-white";
+function rankBadgeClass(rank: number): string {
+  if (rank === 1) return "rank-badge rank-1";
+  if (rank === 2) return "rank-badge rank-2";
+  if (rank === 3) return "rank-badge rank-3";
+  return "rank-badge rank-other";
 }
 
-function getLeftBorderColor(healthScore: number, isSelected: boolean, isFavorite: boolean): string {
-  if (isSelected) return "border-l-emerald-500";
-  if (isFavorite) return "border-l-amber-400";
-  if (healthScore >= 5) return "border-l-emerald-500";
-  if (healthScore >= 4) return "border-l-teal-400";
-  if (healthScore >= 3) return "border-l-gray-300";
-  return "border-l-gray-200";
+function leftBorderColor(healthScore: number, isSelected: boolean, isFavorite: boolean): string {
+  if (isSelected) return "#c9a656"; // gold
+  if (isFavorite) return "#d8be7a"; // light gold
+  if (healthScore >= 5) return "#1a4f3a"; // forest-700
+  if (healthScore >= 4) return "#3f8d6e"; // forest-500
+  if (healthScore >= 3) return "#6ba788"; // forest-400
+  return "#e8dec9"; // ivory-200
 }
 
-function getCalorieColor(cal: number): string {
-  if (cal === 0) return "text-gray-500";
-  if (cal <= 600) return "text-emerald-600";
-  if (cal <= 1000) return "text-amber-600";
-  return "text-red-500";
+function calorieColor(cal: number): string {
+  if (cal === 0) return "text-sumi-500";
+  if (cal <= 600) return "text-forest-500";
+  if (cal <= 1000) return "text-gold-600";
+  return "text-shu-500";
 }
 
-export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = false, onToggleFavorite }: RestaurantCardProps) {
+function StarRow({ score }: { score: number }) {
+  const filled = "★".repeat(score);
+  const empty = "★".repeat(5 - score);
+  return (
+    <span className="text-[13px] leading-none">
+      <span className="text-gold-500">{filled}</span>
+      <span className="text-ivory-200">{empty}</span>
+    </span>
+  );
+}
+
+export default function RestaurantCard({
+  ranked,
+  rank,
+  isSelected,
+  isFavorite = false,
+  onToggleFavorite,
+}: RestaurantCardProps) {
   const { restaurant, reason, isRelaxed } = ranked;
   const peakWarnings = getPeakHourWarnings(restaurant);
 
   return (
-    <div
-      className={`bg-white rounded-2xl shadow-sm p-4 border-l-4 transition-all ${
-        getLeftBorderColor(restaurant.healthScore, isSelected, isFavorite)
-      } ${
-        isSelected ? "ring-2 ring-emerald-300" : isFavorite ? "ring-2 ring-amber-200" : ""
-      }`}
+    <article
+      className={`resto-card p-4 sm:p-5 ${isSelected ? "ring-1 ring-gold-500" : ""}`}
+      style={{ borderLeft: `3px solid ${leftBorderColor(restaurant.healthScore, isSelected, isFavorite)}` }}
     >
-      {/* Rank badge + name + favorite */}
-      <div className="flex items-start gap-2 mb-2">
-        <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${getRankBadgeStyle(rank)}`}>
-          {rank}
-        </span>
+      {/* 順位 + 店名 + お気に入り */}
+      <header className="flex items-start gap-3 mb-2">
+        <span className={rankBadgeClass(rank)}>{rank}</span>
         <div className="flex-1 min-w-0">
-          <h3 className="text-base font-bold text-gray-800 leading-tight">{restaurant.name}</h3>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <h3 className="font-mincho text-base sm:text-lg font-medium text-forest-900 leading-tight">
+              {restaurant.name}
+            </h3>
+            {restaurant.nameReading && (
+              <span className="font-cormorant italic text-[11px] text-gold-600 tracking-widest">
+                {restaurant.nameReading}
+              </span>
+            )}
+          </div>
           {isRelaxed && (
-            <span className="inline-block mt-0.5 px-2 py-0.5 bg-orange-100 text-orange-600 text-xs rounded-full">
+            <span className="inline-block mt-1 px-2 py-0.5 bg-shu-500/10 text-shu-500 text-[10px] rounded-full border border-shu-500/30">
               カロリー条件を少し緩めた候補
             </span>
           )}
@@ -78,63 +102,85 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
           <button
             type="button"
             onClick={() => onToggleFavorite(restaurant.id)}
-            className="flex-shrink-0 text-xl leading-none transition-transform hover:scale-125 active:scale-110"
+            className="flex-shrink-0 transition-transform hover:scale-110 active:scale-95"
             aria-label={isFavorite ? "お気に入りを解除" : "お気に入りに追加"}
           >
-            {isFavorite ? "🌟" : "☆"}
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill={isFavorite ? "#c9a656" : "none"}
+              stroke={isFavorite ? "#a98948" : "#a98948"}
+              strokeWidth="1.5"
+            >
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
           </button>
         )}
-      </div>
+      </header>
 
-      {/* Area + Genre + Walking + Visit types */}
-      <div className="flex flex-wrap gap-1.5 mb-2">
-        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-          {restaurant.area}
-        </span>
-        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs rounded-full font-medium border border-emerald-100">
-          {restaurant.genre}
-        </span>
-        <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-xs rounded-full">
-          徒歩 {restaurant.walkingMinutes}分
-        </span>
+      {/* メタ行（エリア・ジャンル・徒歩・シーン） */}
+      <div className="flex flex-wrap items-center gap-1.5 mb-3 text-[11px]">
+        <span className="text-sumi-700">{restaurant.area}</span>
+        <span className="text-sumi-500">·</span>
+        <span className="text-forest-700 font-medium">{restaurant.genre}</span>
+        <span className="text-sumi-500">·</span>
+        <span className="text-sumi-500">徒歩 {restaurant.walkingMinutes}分</span>
         {restaurant.visitTypes.map((vt) => (
           <span
             key={vt}
-            className={`px-2 py-0.5 text-xs rounded-full font-medium ${VISIT_TYPE_COLORS[vt] ?? "bg-gray-100 text-gray-600"}`}
+            className={`px-2 py-0.5 text-[10px] rounded-full font-medium border ${
+              VISIT_TYPE_COLORS[vt] ?? "bg-ivory-100 text-sumi-700 border-ivory-200"
+            }`}
           >
             {vt}
           </span>
         ))}
       </div>
 
-      {/* Budget */}
-      <div className="mb-1 text-sm">
-        <span className="text-gray-400 text-xs">予算 </span>
-        {restaurant.budgetLunch ? (
-          <span className="text-gray-700 font-medium">ランチ {restaurant.budgetLunch} / 夜 {restaurant.budget}</span>
-        ) : (
-          <span className="text-gray-700 font-medium">{restaurant.budget}</span>
-        )}
-      </div>
+      <div className="gold-rule mb-3" />
 
-      {/* Calories + Health score */}
-      <div className="flex gap-3 mb-2 text-xs text-gray-500">
-        <span>
-          カロリー{" "}
-          <span className={`font-semibold ${getCalorieColor(restaurant.estimatedCalories)}`}>
+      {/* 数値メイン：予算・カロリー・健康 */}
+      <div className="grid grid-cols-3 gap-2 mb-3">
+        <div>
+          <div className="text-[9px] tracking-widest uppercase text-sumi-500 mb-0.5">Budget</div>
+          {restaurant.budgetLunch ? (
+            <>
+              <div className="font-cormorant text-base text-forest-900 leading-none">
+                {restaurant.budgetLunch}
+              </div>
+              <div className="text-[10px] text-sumi-500 mt-0.5">ランチ / 夜 {restaurant.budget}</div>
+            </>
+          ) : (
+            <div className="font-cormorant text-base text-forest-900 leading-none">
+              {restaurant.budget}
+            </div>
+          )}
+        </div>
+        <div className="border-l border-ivory-200 pl-2">
+          <div className="text-[9px] tracking-widest uppercase text-sumi-500 mb-0.5">Calorie</div>
+          <div className={`font-cormorant text-base leading-none font-medium ${calorieColor(restaurant.estimatedCalories)}`}>
             {formatCalories(restaurant.estimatedCalories)}
-          </span>
-        </span>
-        <span>健康 <span className="text-amber-500 font-medium">{healthScoreLabel(restaurant.healthScore)}</span></span>
+          </div>
+        </div>
+        <div className="border-l border-ivory-200 pl-2">
+          <div className="text-[9px] tracking-widest uppercase text-sumi-500 mb-0.5">Health</div>
+          <div className="flex items-center gap-1">
+            <StarRow score={restaurant.healthScore} />
+          </div>
+          <div className="text-[10px] text-sumi-500 mt-0.5">{healthScoreLabel(restaurant.healthScore)}</div>
+        </div>
       </div>
 
-      {/* Health tags */}
+      {/* 健康タグ */}
       {restaurant.healthTags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-1.5">
+        <div className="flex flex-wrap gap-1 mb-2">
           {restaurant.healthTags.map((tag) => (
             <span
               key={tag}
-              className={`px-2 py-0.5 text-xs rounded-full font-medium ${HEALTH_TAG_COLORS[tag] ?? "bg-gray-100 text-gray-600"}`}
+              className={`px-2 py-0.5 text-[10px] rounded-full font-medium border ${
+                HEALTH_TAG_BG[tag] ?? "bg-ivory-100 text-sumi-700 border-ivory-200"
+              }`}
             >
               {tag}
             </span>
@@ -142,24 +188,31 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
         </div>
       )}
 
-      {/* Drink pairings */}
+      {/* お酒 */}
       {restaurant.drinkPairings.length > 0 && (
-        <div className="flex flex-wrap gap-1 items-center mb-2">
-          <span className="text-xs text-gray-400">お酒：</span>
-          {restaurant.drinkPairings.map((d) => (
-            <span key={d} className="px-2 py-0.5 bg-slate-100 text-slate-500 text-xs rounded-full">
+        <div className="flex flex-wrap items-center gap-1 mb-2 text-[11px]">
+          <span className="text-sumi-500">お酒：</span>
+          {restaurant.drinkPairings.slice(0, 4).map((d) => (
+            <span key={d} className="text-sumi-700">
               {d}
+              <span className="text-sumi-500 mx-1 last:hidden">·</span>
             </span>
           ))}
+          {restaurant.drinkPairings.length > 4 && (
+            <span className="text-sumi-500">他{restaurant.drinkPairings.length - 4}</span>
+          )}
         </div>
       )}
 
-      {/* Description */}
-      <p className="text-sm text-gray-600 mb-2 leading-snug line-clamp-2">{restaurant.description}</p>
+      {/* 説明 */}
+      <p className="font-mincho text-[13px] text-sumi-700 leading-relaxed mb-3 line-clamp-2">
+        {restaurant.description}
+      </p>
 
-      {/* Photo */}
+      {/* 写真 */}
       {restaurant.imageUrl && (
-        <div className="mb-2 rounded-xl overflow-hidden">
+        <div className="mb-3 rounded-xl overflow-hidden border border-ivory-200">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={restaurant.imageUrl}
             alt={`${restaurant.name}の写真`}
@@ -168,40 +221,48 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
         </div>
       )}
 
-      {/* Address + Hours */}
-      <div className="mb-1.5 text-xs text-gray-400 space-y-0.5">
-        <p>📍 {restaurant.address}</p>
-        <p>🕐 {restaurant.openingHours}</p>
+      {/* 住所・営業時間 */}
+      <div className="text-[11px] text-sumi-500 space-y-0.5 mb-2">
+        <p>{restaurant.address}</p>
+        <p>{restaurant.openingHours}</p>
       </div>
 
-      {/* Peak hour warnings */}
+      {/* ピーク注意 */}
       {peakWarnings.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
           {peakWarnings.map((w) => (
-            <span key={w} className="px-2 py-0.5 bg-orange-50 text-orange-500 text-xs rounded-full border border-orange-200">
-              ⚠️ {w}
+            <span
+              key={w}
+              className="px-2 py-0.5 bg-shu-500/10 text-shu-500 text-[10px] rounded-full border border-shu-500/30"
+            >
+              ⚠ {w}
             </span>
           ))}
         </div>
       )}
 
-      {/* Reason */}
-      <div className="bg-emerald-50 rounded-lg px-3 py-2 border border-emerald-100 mb-1.5">
-        <p className="text-xs text-emerald-500 font-semibold mb-0.5">選ばれた理由</p>
-        <p className="text-sm text-emerald-800 font-medium line-clamp-2">{reason}</p>
+      {/* 選ばれた理由 */}
+      <div className="paper rounded-lg px-3 py-2.5 border border-ivory-200 mb-2">
+        <div className="font-cormorant italic text-[10px] tracking-[0.2em] text-gold-600 mb-1">
+          REASON · 選ばれた理由
+        </div>
+        <p className="font-mincho text-[13px] text-forest-900 leading-relaxed line-clamp-2">
+          {reason}
+        </p>
       </div>
 
-      {/* Tabelog link */}
+      {/* 食べログ */}
       {restaurant.tabelogUrl && (
         <a
           href={restaurant.tabelogUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 border border-red-100 text-red-500 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ivory-50 border border-ivory-200 text-shu-500 text-[11px] font-medium rounded-lg hover:bg-shu-500/5 hover:border-shu-500/30 transition-colors"
         >
-          🍽️ 食べログで見る →
+          食べログで見る
+          <span className="font-cormorant italic">›</span>
         </a>
       )}
-    </div>
+    </article>
   );
 }

@@ -131,9 +131,9 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f2f8f3]">
-      {/* Header */}
-      <header className="relative text-white overflow-hidden shadow-lg">
+    <main className="min-h-screen">
+      {/* ============ HEADER ============ */}
+      <header className="relative text-ivory-50 overflow-hidden">
         {/* 背景フード写真 */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -142,10 +142,10 @@ export default function HomePage() {
               "url('https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=1400&q=80')",
           }}
         />
-        {/* グラデーションオーバーレイ */}
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/50 via-black/20 to-emerald-950/55" />
+        {/* 深いオーバーレイ */}
+        <div className="absolute inset-0 bg-gradient-to-b from-forest-900/40 via-forest-900/70 to-forest-900" />
 
-        {/* 山手線高架＋建物シルエット — ヘッダー下部 */}
+        {/* ビル群＋高架シルエット（深いフォレストで沈める） */}
         <svg
           className="absolute bottom-0 left-0 w-full pointer-events-none"
           viewBox="0 0 800 90"
@@ -154,62 +154,82 @@ export default function HomePage() {
           preserveAspectRatio="xMidYMax meet"
           aria-hidden="true"
         >
-          {/* 左側 高層ビル群（高さランダム） */}
-          <rect x="0"   y="10" width="30" height="80" fill="white" opacity="0.14"/>
-          <rect x="34"  y="30" width="26" height="60" fill="white" opacity="0.12"/>
-          <rect x="64"  y="0"  width="28" height="90" fill="white" opacity="0.15"/>
-          <rect x="68"  y="-4" width="8"  height="6"  fill="white" opacity="0.11"/>
-          <rect x="96"  y="22" width="24" height="68" fill="white" opacity="0.11"/>
-          <rect x="124" y="45" width="20" height="45" fill="white" opacity="0.09"/>
-          <rect x="148" y="15" width="26" height="75" fill="white" opacity="0.13"/>
-          <rect x="178" y="55" width="18" height="35" fill="white" opacity="0.08"/>
-          <rect x="200" y="38" width="22" height="52" fill="white" opacity="0.10"/>
+          <rect x="0"   y="10" width="30" height="80" fill="#0d2e22" opacity="0.95" />
+          <rect x="34"  y="30" width="26" height="60" fill="#0d2e22" opacity="0.9"  />
+          <rect x="64"  y="0"  width="28" height="90" fill="#0d2e22" opacity="0.95" />
+          <rect x="68"  y="-4" width="8"  height="6"  fill="#0d2e22" opacity="0.9"  />
+          <rect x="96"  y="22" width="24" height="68" fill="#0d2e22" opacity="0.9"  />
+          <rect x="124" y="45" width="20" height="45" fill="#0d2e22" opacity="0.85" />
+          <rect x="148" y="15" width="26" height="75" fill="#0d2e22" opacity="0.92" />
+          <rect x="178" y="55" width="18" height="35" fill="#0d2e22" opacity="0.85" />
+          <rect x="200" y="38" width="22" height="52" fill="#0d2e22" opacity="0.88" />
 
-          {/* 右側 高層ビル群（高さランダム） */}
-          <rect x="578" y="38" width="22" height="52" fill="white" opacity="0.10"/>
-          <rect x="604" y="55" width="18" height="35" fill="white" opacity="0.08"/>
-          <rect x="626" y="15" width="26" height="75" fill="white" opacity="0.13"/>
-          <rect x="656" y="45" width="20" height="45" fill="white" opacity="0.09"/>
-          <rect x="680" y="22" width="24" height="68" fill="white" opacity="0.11"/>
-          <rect x="708" y="0"  width="28" height="90" fill="white" opacity="0.15"/>
-          <rect x="712" y="-4" width="8"  height="6"  fill="white" opacity="0.11"/>
-          <rect x="740" y="30" width="26" height="60" fill="white" opacity="0.12"/>
-          <rect x="770" y="10" width="30" height="80" fill="white" opacity="0.14"/>
+          <rect x="578" y="38" width="22" height="52" fill="#0d2e22" opacity="0.88" />
+          <rect x="604" y="55" width="18" height="35" fill="#0d2e22" opacity="0.85" />
+          <rect x="626" y="15" width="26" height="75" fill="#0d2e22" opacity="0.92" />
+          <rect x="656" y="45" width="20" height="45" fill="#0d2e22" opacity="0.85" />
+          <rect x="680" y="22" width="24" height="68" fill="#0d2e22" opacity="0.9"  />
+          <rect x="708" y="0"  width="28" height="90" fill="#0d2e22" opacity="0.95" />
+          <rect x="712" y="-4" width="8"  height="6"  fill="#0d2e22" opacity="0.9"  />
+          <rect x="740" y="30" width="26" height="60" fill="#0d2e22" opacity="0.9"  />
+          <rect x="770" y="10" width="30" height="80" fill="#0d2e22" opacity="0.95" />
 
           {/* 高架の柱 */}
           {[240, 290, 340, 390, 440, 490, 540].map((x) => (
-            <rect key={x} x={x} y="52" width="6" height="38" fill="white" opacity="0.25" rx="1"/>
+            <rect key={x} x={x} y="52" width="6" height="38" fill="#0d2e22" opacity="0.9" rx="1" />
           ))}
-          {/* 高架の梁（横） */}
-          <rect x="237" y="48" width="312" height="7" fill="white" opacity="0.30" rx="2"/>
-          {/* レール */}
-          <rect x="235" y="44" width="316" height="2.5" fill="white" opacity="0.45" rx="1"/>
-          <rect x="235" y="50" width="316" height="1.5" fill="white" opacity="0.35" rx="1"/>
-          {/* 架線（電線） */}
-          <path d="M 235 38 Q 268 34 290 38 Q 318 34 340 38 Q 368 34 390 38 Q 418 34 440 38 Q 468 34 490 38 Q 518 34 540 38 Q 551 34 551 38" stroke="white" strokeWidth="1" opacity="0.3"/>
+          {/* 高架の梁 */}
+          <rect x="237" y="48" width="312" height="7" fill="#0d2e22" opacity="0.9" rx="2" />
+          {/* 金のレール（線） */}
+          <rect x="235" y="44" width="316" height="2" fill="#c9a656" opacity="0.55" rx="1" />
+          <rect x="235" y="50" width="316" height="1" fill="#c9a656" opacity="0.35" rx="1" />
         </svg>
 
-        {/* テキスト */}
-        <div className="relative py-16 px-4">
+        {/* 上部の小さなロゴ行 */}
+        <div className="relative z-10 max-w-2xl mx-auto px-5 pt-5 flex justify-between items-center">
+          <span className="font-cormorant italic tracking-[0.3em] text-[11px] text-gold-400">
+            EST. 2026
+          </span>
+          <span className="font-cormorant italic tracking-[0.3em] text-[11px] text-gold-400">
+            AKASAKA · TOKYO
+          </span>
+        </div>
+
+        {/* メインタイトル */}
+        <div className="relative z-10 py-14 sm:py-20 px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-medium">
-                📍 赤坂 · 港区
-              </span>
-            </div>
-            <p className="text-green-300 text-xs font-semibold tracking-[0.25em] uppercase mb-3">Akasaka Healthy Eats</p>
-            <h1 className="text-2xl sm:text-3xl font-black leading-tight mb-3 drop-shadow-lg">
+            <p className="font-cormorant italic text-gold-400 text-xs sm:text-sm tracking-[0.4em] mb-4">
+              · TONIGHT&apos;S CHOICE ·
+            </p>
+            <h1 className="font-mincho text-2xl sm:text-3xl font-medium leading-tight text-ivory-50 drop-shadow-lg">
               健康を気にする人のための<br />赤坂外食決定機
             </h1>
-            <p className="text-gray-300 text-sm leading-relaxed max-w-md mx-auto">
-              カロリー・ジャンル・シーン・お酒の条件を選んで、<br className="hidden sm:block" />
+            <div className="flex justify-center my-4">
+              <div className="mizuhiki" />
+            </div>
+            <p
+              className="font-mincho text-ivory-100/90 text-xs sm:text-sm leading-relaxed"
+              style={{ wordBreak: "auto-phrase" } as React.CSSProperties}
+            >
+              カロリー・ジャンル・シーン・お酒の条件を選んで、<br />
               今日の自分にぴったりの1店を見つけよう。
             </p>
           </div>
         </div>
       </header>
 
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-8">
+      {/* ============ BODY ============ */}
+      <div className="max-w-2xl mx-auto px-4 py-8 space-y-10">
+        {/* 件数表示 */}
+        <div className="text-center">
+          <div className="font-cormorant italic text-[11px] tracking-[0.3em] text-gold-600">
+            <span className="font-cormorant text-base not-italic text-forest-900 tracking-normal mx-1">
+              {restaurants.length}
+            </span>
+            RESTAURANTS · 赤坂エリアの掲載店
+          </div>
+        </div>
+
         {/* Filter form */}
         <section>
           <FilterForm filters={filters} onChange={setFilters} onSubmit={handleSubmit} />
@@ -218,69 +238,82 @@ export default function HomePage() {
         {/* Results */}
         {hasSearched && (
           <section ref={resultsRef}>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-1 h-6 bg-emerald-600 rounded-full flex-shrink-0" />
-              <h2 className="text-base font-bold text-gray-700 whitespace-nowrap">
-                健康を意識したおすすめ候補
-              </h2>
-              <div className="flex items-center gap-2 ml-auto">
-                <span className="text-xs text-gray-400 bg-white px-2 py-0.5 rounded-full shadow-sm">{results.length}件</span>
+            <div className="flex items-end justify-between mb-5 gap-3">
+              <div>
+                <div className="section-label">CANDIDATES</div>
+                <h2 className="font-mincho text-xl mt-1 text-forest-900">
+                  健康を意識した候補
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-cormorant text-sm italic text-gold-600 whitespace-nowrap">
+                  {results.length} of {restaurants.length}
+                </span>
                 {favorites.size > 0 && (
                   <button
                     type="button"
                     onClick={() => setShowFavoritesOnly((v) => !v)}
-                    className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                      showFavoritesOnly
-                        ? "bg-amber-400 text-white shadow-sm"
-                        : "bg-white text-amber-600 border border-amber-200 shadow-sm"
-                    }`}
+                    className={`chip chip-sm whitespace-nowrap ${showFavoritesOnly ? "chip-gold" : ""}`}
                   >
-                    🌟 お気に入り {favorites.size}件
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="-mt-px"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    お気に入り {favorites.size}
                   </button>
                 )}
               </div>
             </div>
 
             {results.length === 0 ? (
-              <div className="bg-white rounded-2xl shadow-md p-8 text-center">
-                <p className="text-gray-400 text-4xl mb-3">🔍</p>
-                <p className="text-gray-600 font-medium">条件に合うお店が見つかりませんでした</p>
-                <p className="text-gray-400 text-sm mt-1">条件を変えてもう一度試してみてください</p>
+              <div className="paper rounded-2xl p-10 text-center border border-ivory-200">
+                <p className="font-mincho text-base text-sumi-700">
+                  条件に合う店が、見つかりませんでした。
+                </p>
+                <p className="font-cormorant italic text-xs text-gold-600 mt-2 tracking-widest">
+                  · TRY OTHER FILTERS ·
+                </p>
+              </div>
+            ) : displayedResults.length === 0 && showFavoritesOnly ? (
+              <div className="paper rounded-2xl p-10 text-center border border-ivory-200">
+                <p className="font-mincho text-base text-sumi-700">
+                  この検索結果に、お気に入りはありません。
+                </p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {displayedResults.length === 0 && showFavoritesOnly ? (
-                  <div className="bg-white rounded-2xl shadow-md p-8 text-center">
-                    <p className="text-gray-400 text-4xl mb-3">🤍</p>
-                    <p className="text-gray-600 font-medium">この検索結果にお気に入りはありません</p>
-                  </div>
-                ) : (
-                  displayedResults.map((ranked, index) => (
-                    <RestaurantCard
-                      key={ranked.restaurant.id}
-                      ranked={ranked}
-                      rank={index + 1}
-                      isSelected={selected?.restaurant.id === ranked.restaurant.id}
-                      isFavorite={isFavorite(ranked.restaurant.id)}
-                      onToggleFavorite={toggleFavorite}
-                    />
-                  ))
-                )}
+              <div className="space-y-3">
+                {displayedResults.map((ranked, index) => (
+                  <RestaurantCard
+                    key={ranked.restaurant.id}
+                    ranked={ranked}
+                    rank={index + 1}
+                    isSelected={selected?.restaurant.id === ranked.restaurant.id}
+                    isFavorite={isFavorite(ranked.restaurant.id)}
+                    onToggleFavorite={toggleFavorite}
+                  />
+                ))}
               </div>
             )}
 
             {results.length > 0 && (
-              <div className="mt-6">
+              <div className="mt-8">
                 <button
                   type="button"
                   onClick={handleDecide}
-                  className="w-full bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-black py-5 px-6 rounded-2xl text-xl transition-all shadow-lg hover:shadow-xl tracking-wide flex items-center justify-center gap-2"
+                  className="decide-btn w-full py-4 px-6 rounded-xl font-mincho text-lg tracking-widest"
                 >
-                  <span>🎯</span>
-                  <span>今日の1店を決める！</span>
+                  今宵の一軒を、決める
+                  <span className="block text-[10px] font-cormorant italic mt-1 text-gold-400 tracking-[0.3em]">
+                    DECIDE TONIGHT
+                  </span>
                 </button>
-                <p className="text-center text-xs text-gray-400 mt-2">
-                  上位8件からランダムに1店を選びます
+                <p className="text-center font-cormorant italic text-[11px] text-gold-600 mt-3 tracking-widest">
+                  · randomly picked from top 8 ·
                 </p>
               </div>
             )}
@@ -294,81 +327,111 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* ハズレカード */}
+        {/* ============ ハズレカード ============ */}
         {isHazure && !selected && (
           <section ref={decisionRef}>
             <div className="rounded-2xl overflow-hidden shadow-xl">
-              {/* Header */}
-              <div className="relative overflow-hidden px-6 pt-6 pb-8 bg-gray-800">
-                <div className="absolute inset-0 bg-cover" style={{ backgroundImage: "url('/seven-eleven.jpg.png')", backgroundPosition: "center 15%" }} />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-                <p className="absolute bottom-2 right-3 text-white/40 text-xs z-10">※写真はイメージです</p>
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-3">
-                    <p className="text-green-200 text-xs font-semibold tracking-[0.25em] uppercase">Today&apos;s Pick</p>
-                    {/* 7-ELEVEnロゴ風テキスト */}
-                    <span className="inline-flex items-baseline bg-white rounded px-2 py-0.5 shadow-md select-none">
-                      <span style={{ color: "#f47920", fontWeight: 900, fontSize: "1.1rem", fontFamily: "Arial Black, sans-serif", lineHeight: 1 }}>7</span>
-                      <span style={{ color: "#c8102e", fontWeight: 900, fontSize: "1.1rem", fontFamily: "Arial Black, sans-serif", lineHeight: 1 }}>-</span>
-                      <span style={{ color: "#006835", fontWeight: 900, fontSize: "0.85rem", fontFamily: "Arial Black, sans-serif", lineHeight: 1, letterSpacing: "-0.02em" }}>ELEVE</span>
-                      <span style={{ color: "#006835", fontWeight: 900, fontSize: "0.85rem", fontFamily: "Arial Black, sans-serif", lineHeight: 1, letterSpacing: "-0.02em" }}>n</span>
-                    </span>
-                  </div>
-                  <h2 className="text-white text-2xl font-extrabold mb-2 leading-tight drop-shadow-lg">
-                    今日の赤坂外食はここ！
-                  </h2>
-                  <p className="text-3xl sm:text-4xl font-black text-white drop-shadow-lg mb-4">
-                    {hazureItem.store} {hazureItem.name === "サラダチキン（プレーン）" ? <><br />{hazureItem.name}</> : hazureItem.name}
+              {/* 上：暗い 7-Eleven 写真 */}
+              <div className="relative overflow-hidden px-6 pt-8 pb-10 bg-sumi-900">
+                <div
+                  className="absolute inset-0 bg-cover"
+                  style={{
+                    backgroundImage: "url('/seven-eleven.jpg.png')",
+                    backgroundPosition: "center 15%",
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-sumi-900/70 via-sumi-900/55 to-sumi-900/85" />
+                <p className="absolute bottom-2 right-3 text-ivory-50/30 text-[10px] z-10">
+                  ※写真はイメージです
+                </p>
+
+                <div className="relative text-center">
+                  <p className="font-cormorant italic text-shu-500 text-xs sm:text-sm tracking-[0.4em] mb-3">
+                    · UNFORTUNATELY ·
                   </p>
-                  <div className="flex flex-wrap gap-3">
-                    <span className="bg-white/20 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm">赤坂</span>
-                    <span className="bg-white/20 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm">{hazureItem.tag}</span>
-                    <span className="bg-white/20 text-white text-sm px-3 py-1 rounded-full backdrop-blur-sm">徒歩 1分</span>
+                  <div className="inline-block shu-stamp mb-3">
+                    PROBABILITY 1/20
                   </div>
+                  <h2 className="font-mincho text-xl sm:text-2xl text-ivory-50 mb-2 drop-shadow-lg">
+                    今夜は、外食、しないで。
+                  </h2>
+                  <div className="mizuhiki mx-auto my-3 opacity-80" />
+                  <h3 className="font-mincho text-3xl sm:text-4xl font-medium text-ivory-50 leading-tight drop-shadow-lg">
+                    {hazureItem.store}
+                    <br />
+                    {hazureItem.name}
+                  </h3>
                 </div>
               </div>
 
-              {/* Body */}
-              <div className="bg-white px-6 py-5 space-y-4">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div className="bg-gray-50 rounded-xl p-3">
-                    <p className="text-xs text-gray-500 mb-1">予算</p>
-                    <p className="text-sm font-bold text-gray-800">{hazureItem.price}</p>
+              {/* 下：紙の質感の本体 */}
+              <div className="paper px-6 py-6 space-y-5 border-x border-b border-ivory-200">
+                {/* 三本柱 */}
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div>
+                    <div className="text-[9px] tracking-widest uppercase text-sumi-500 mb-1">Price</div>
+                    <div className="font-cormorant text-base text-forest-900 leading-tight">
+                      {hazureItem.price}
+                    </div>
                   </div>
-                  <div className="bg-green-50 rounded-xl p-3">
-                    <p className="text-xs text-gray-500 mb-1">カロリー</p>
-                    <p className="text-sm font-bold text-green-700">{hazureItem.kcal}</p>
+                  <div className="border-x border-ivory-200">
+                    <div className="text-[9px] tracking-widest uppercase text-sumi-500 mb-1">Calorie</div>
+                    <div className="font-cormorant text-base text-forest-500 leading-tight">
+                      {hazureItem.kcal}
+                    </div>
                   </div>
-                  <div className="bg-yellow-50 rounded-xl p-3">
-                    <p className="text-xs text-gray-500 mb-1">健康スコア</p>
-                    <p className="text-sm font-bold text-yellow-600">{hazureItem.score}</p>
+                  <div>
+                    <div className="text-[9px] tracking-widest uppercase text-sumi-500 mb-1">Score</div>
+                    <div className="text-gold-500 leading-tight text-base">
+                      {hazureItem.score}
+                    </div>
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm leading-relaxed">{hazureItem.desc}</p>
+                <div className="gold-rule" />
 
-                <div className="space-y-1 text-sm text-gray-500">
-                  <p>📍 港区赤坂 セブンイレブン赤坂店</p>
-                  <p>🕐 24時間営業 / 年中無休</p>
-                </div>
-
-                <div className="flex flex-wrap gap-1">
-                  {hazureItem.tags.map((tag) => (
-                    <span key={tag} className="px-3 py-1 text-xs rounded-full font-semibold bg-teal-200 text-teal-800">{tag}</span>
+                {/* タグ */}
+                <div className="flex flex-wrap gap-1.5 justify-center">
+                  <span className="chip chip-sm">赤坂</span>
+                  <span className="chip chip-sm">{hazureItem.tag}</span>
+                  <span className="chip chip-sm">徒歩 1分</span>
+                  {hazureItem.tags.map((t) => (
+                    <span key={t} className="chip chip-sm chip-gold">
+                      {t}
+                    </span>
                   ))}
                 </div>
 
-                <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-                  <p className="text-xs text-gray-500 font-semibold mb-1">選ばれた理由</p>
-                  <p className="text-sm text-gray-700 leading-relaxed">{hazureReason}</p>
+                {/* 説明 */}
+                <p className="font-mincho text-sm text-sumi-700 leading-relaxed">
+                  {hazureItem.desc}
+                </p>
+
+                <div className="space-y-1 text-xs text-sumi-500">
+                  <p>港区赤坂 セブンイレブン赤坂店</p>
+                  <p>24時間営業 / 年中無休</p>
                 </div>
+
+                {/* 選ばれた理由 */}
+                <div className="miss-card px-4 py-3">
+                  <div className="font-cormorant italic text-[10px] tracking-[0.2em] text-shu-500 mb-1">
+                    REASON · 選ばれた理由
+                  </div>
+                  <p className="font-mincho text-sm text-sumi-700 leading-relaxed">
+                    {hazureReason}
+                  </p>
+                </div>
+
+                <p className="text-center font-mincho text-xs text-sumi-500 leading-relaxed">
+                  たまには、こういう夜も<br className="sm:hidden" />悪くないですよ。
+                </p>
 
                 <button
                   type="button"
                   onClick={handleRedraw}
-                  className="w-full border-2 border-green-500 text-green-600 hover:bg-green-50 font-bold py-3 px-6 rounded-xl text-base transition-colors"
+                  className="w-full px-4 py-3 border border-forest-700 text-forest-700 hover:bg-forest-700 hover:text-ivory-50 font-mincho text-sm rounded-xl transition-colors"
                 >
-                  もう一度引き直す
+                  もう一度、引き直す
                 </button>
               </div>
             </div>
@@ -376,14 +439,17 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="mt-8 bg-white border-t border-gray-100 py-8 text-center">
-        <div className="flex items-center justify-center gap-2 mb-1">
-          <span className="text-emerald-600 text-lg">🌿</span>
-          <p className="text-sm font-bold text-gray-600 tracking-wide">赤坂外食決定機</p>
+      {/* ============ FOOTER ============ */}
+      <footer className="text-center py-10 mt-8 border-t border-ivory-200">
+        <div className="max-w-2xl mx-auto px-4">
+          <div className="gold-rule max-w-xs mx-auto mb-4" />
+          <p className="font-mincho text-xs text-sumi-700">
+            健康を気にする人のための赤坂外食決定機
+          </p>
+          <p className="font-cormorant italic text-[10px] text-gold-600 mt-2 tracking-[0.3em]">
+            · SAMPLE DATA · AKASAKA · TOKYO ·
+          </p>
         </div>
-        <p className="text-xs text-gray-400">健康を気にする人のための赤坂外食ガイド</p>
-        <p className="text-xs text-gray-300 mt-1">掲載情報はサンプルデータです</p>
       </footer>
     </main>
   );
