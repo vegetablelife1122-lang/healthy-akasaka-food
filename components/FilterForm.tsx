@@ -38,7 +38,6 @@ export default function FilterForm({ filters, onChange, onSubmit, hasLocation = 
       <div className="px-6 pt-6 pb-3 flex items-end justify-between">
         <div>
           <div className="section-label">FILTERS</div>
-          <h3 className="font-mincho text-lg mt-1 text-forest-900">条件を選ぶ</h3>
         </div>
       </div>
       <div className="gold-rule mx-6" />
