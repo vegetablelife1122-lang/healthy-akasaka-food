@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     title: "赤坂外食",
   },
   icons: {
-    icon: "/icon-192.svg",
-    apple: "/icon-512.svg",
+    icon: "/icon-192.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 
