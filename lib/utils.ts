@@ -1,4 +1,64 @@
-import type { RankedRestaurant, Restaurant } from "./types";
+import type { RankedRestaurant, Restaurant, Area } from "./types";
+
+// ────────── 位置情報・距離計算 ──────────
+
+/** エリアごとの駅座標 */
+const STATION_COORDS: Record<Area, { lat: number; lng: number }> = {
+  "赤坂":     { lat: 35.6741, lng: 139.7364 },
+  "赤坂見附": { lat: 35.6756, lng: 139.7369 },
+  "溜池山王": { lat: 35.6732, lng: 139.7402 },
+};
+
+/**
+ * レストランの近似座標を返す。
+ * restaurant.lat/lng があればそちらを優先、なければ
+ * エリア駅座標 + walkingMinutes で散らした近似値を返す。
+ */
+export function getRestaurantCoords(restaurant: Restaurant): { lat: number; lng: number } {
+  if (restaurant.lat !== undefined && restaurant.lng !== undefined) {
+    return { lat: restaurant.lat, lng: restaurant.lng };
+  }
+  const base = STATION_COORDS[restaurant.area] ?? STATION_COORDS["赤坂"];
+  const radius = restaurant.walkingMinutes * 75; // 75m/分
+  // ID の文字コード和をシードにして決定論的に散らす
+  const seed = restaurant.id.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+  const angle = (seed * 137.508) % 360; // 黄金角
+  const latOffset = (radius / 111000) * Math.cos((angle * Math.PI) / 180);
+  const lngOffset = (radius / (111000 * Math.cos((base.lat * Math.PI) / 180))) * Math.sin((angle * Math.PI) / 180);
+  return {
+    lat: base.lat + latOffset,
+    lng: base.lng + lngOffset,
+  };
+}
+
+/** Haversine距離（メートル） */
+export function distanceMeters(
+  lat1: number, lng1: number,
+  lat2: number, lng2: number
+): number {
+  const R = 6371000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) *
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/** 距離を表示用文字列に変換 */
+export function formatDistance(meters: number): string {
+  if (meters < 1000) return `${Math.round(meters)}m`;
+  return `${(meters / 1000).toFixed(1)}km`;
+}
+
+/** Google Maps ナビURLを生成 */
+export function googleMapsUrl(restaurant: Restaurant): string {
+  const coords = getRestaurantCoords(restaurant);
+  const name = encodeURIComponent(restaurant.name);
+  return `https://www.google.com/maps/search/?api=1&query=${name}&query_place_id=&center=${coords.lat},${coords.lng}`;
+}
 
 // ひらがな・カタカナ・大小英字を統一してあいまい検索を可能にする
 export function normalizeForSearch(text: string): string {

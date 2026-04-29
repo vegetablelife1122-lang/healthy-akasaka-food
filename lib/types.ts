@@ -51,6 +51,8 @@ export interface Restaurant {
   openingHours: string;
   imageUrl?: string;
   tabelogUrl?: string;
+  lat?: number;
+  lng?: number;
 }
 
 export interface Filters {
@@ -66,6 +68,12 @@ export interface Filters {
   preferVegetable: boolean;
   preferLowFried: boolean;
   openNow: boolean;
+  sortByDistance: boolean;
+}
+
+export interface UserLocation {
+  lat: number;
+  lng: number;
 }
 
 export interface RankedRestaurant {

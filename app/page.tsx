@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
-import type { Filters, RankedRestaurant } from "@/lib/types";
+import type { Filters, RankedRestaurant, UserLocation } from "@/lib/types";
 import { rankRestaurants } from "@/lib/scoring";
-import { pickRandomRestaurant } from "@/lib/utils";
+import { pickRandomRestaurant, distanceMeters, getRestaurantCoords } from "@/lib/utils";
 import { restaurants } from "@/data/restaurants";
 import FilterForm from "@/components/FilterForm";
 import RestaurantCard from "@/components/RestaurantCard";
@@ -63,6 +63,7 @@ const DEFAULT_FILTERS: Filters = {
   preferVegetable: false,
   preferLowFried: false,
   openNow: false,
+  sortByDistance: false,
 };
 
 export default function HomePage() {
@@ -75,17 +76,52 @@ export default function HomePage() {
   const [hazureReason, setHazureReason] = useState("");
   const [hazureItem, setHazureItem] = useState(HAZURE_ITEMS[0]);
 
+  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const decisionRef = useRef<HTMLDivElement>(null);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("この端末では位置情報が使えません");
+      return;
+    }
+    setLocationLoading(true);
+    setLocationError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationLoading(false);
+        setFilters((f) => ({ ...f, sortByDistance: true }));
+      },
+      () => {
+        setLocationError("位置情報の取得に失敗しました");
+        setLocationLoading(false);
+      },
+      { timeout: 10000 }
+    );
+  };
 
   const displayedResults = showFavoritesOnly
     ? results.filter((r) => isFavorite(r.restaurant.id))
     : results;
 
   const handleSubmit = () => {
-    const ranked = rankRestaurants(restaurants, filters);
+    let ranked = rankRestaurants(restaurants, filters);
+    if (filters.sortByDistance && userLocation) {
+      ranked = [...ranked].sort((a, b) => {
+        const ca = getRestaurantCoords(a.restaurant);
+        const cb = getRestaurantCoords(b.restaurant);
+        return (
+          distanceMeters(userLocation.lat, userLocation.lng, ca.lat, ca.lng) -
+          distanceMeters(userLocation.lat, userLocation.lng, cb.lat, cb.lng)
+        );
+      });
+    }
     setResults(ranked);
     setSelected(null);
     setHasSearched(true);
@@ -233,6 +269,43 @@ export default function HomePage() {
         {/* Filter form */}
         <section>
           <FilterForm filters={filters} onChange={setFilters} onSubmit={handleSubmit} />
+          {/* 現在地ボタン */}
+          <div className="mt-3 flex flex-col items-center gap-1">
+            <button
+              type="button"
+              onClick={handleGetLocation}
+              disabled={locationLoading}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                userLocation
+                  ? "bg-forest-800 text-ivory-50 border-forest-700"
+                  : "bg-white text-forest-800 border-forest-300 hover:border-forest-600"
+              } ${locationLoading ? "opacity-60 cursor-not-allowed" : ""}`}
+            >
+              <span>{locationLoading ? "⏳" : userLocation ? "📍" : "🗺️"}</span>
+              <span>
+                {locationLoading
+                  ? "位置情報を取得中..."
+                  : userLocation
+                  ? "現在地から近い順で表示中"
+                  : "現在地から近い順にする"}
+              </span>
+            </button>
+            {locationError && (
+              <p className="text-red-500 text-xs">{locationError}</p>
+            )}
+            {userLocation && (
+              <button
+                type="button"
+                onClick={() => {
+                  setUserLocation(null);
+                  setFilters((f) => ({ ...f, sortByDistance: false }));
+                }}
+                className="text-xs text-gray-400 hover:text-gray-600 underline"
+              >
+                現在地をリセット
+              </button>
+            )}
+          </div>
         </section>
 
         {/* Results */}
@@ -295,6 +368,7 @@ export default function HomePage() {
                     isSelected={selected?.restaurant.id === ranked.restaurant.id}
                     isFavorite={isFavorite(ranked.restaurant.id)}
                     onToggleFavorite={toggleFavorite}
+                    userLocation={userLocation}
                   />
                 ))}
               </div>

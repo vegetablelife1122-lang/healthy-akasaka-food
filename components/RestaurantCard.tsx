@@ -1,5 +1,5 @@
-import type { RankedRestaurant } from "@/lib/types";
-import { formatCalories, healthScoreLabel, getPeakHourWarnings } from "@/lib/utils";
+import type { RankedRestaurant, UserLocation } from "@/lib/types";
+import { formatCalories, healthScoreLabel, getPeakHourWarnings, distanceMeters, getRestaurantCoords, formatDistance, googleMapsUrl } from "@/lib/utils";
 
 interface RestaurantCardProps {
   ranked: RankedRestaurant;
@@ -7,6 +7,7 @@ interface RestaurantCardProps {
   isSelected: boolean;
   isFavorite?: boolean;
   onToggleFavorite?: (id: string) => void;
+  userLocation?: UserLocation | null;
 }
 
 const HEALTH_TAG_BG: Record<string, string> = {
@@ -69,9 +70,16 @@ export default function RestaurantCard({
   isSelected,
   isFavorite = false,
   onToggleFavorite,
+  userLocation,
 }: RestaurantCardProps) {
   const { restaurant, reason, isRelaxed } = ranked;
   const peakWarnings = getPeakHourWarnings(restaurant);
+
+  const distanceStr = (() => {
+    if (!userLocation) return null;
+    const c = getRestaurantCoords(restaurant);
+    return formatDistance(distanceMeters(userLocation.lat, userLocation.lng, c.lat, c.lng));
+  })();
 
   return (
     <article
@@ -126,6 +134,11 @@ export default function RestaurantCard({
         <span className="text-forest-700 font-medium">{restaurant.genre}</span>
         <span className="text-sumi-500">·</span>
         <span className="text-sumi-500">徒歩 {restaurant.walkingMinutes}分</span>
+        {distanceStr && (
+          <span className="px-2 py-0.5 bg-forest-700/10 text-forest-800 border border-forest-700/20 text-[10px] rounded-full font-medium">
+            📍 現在地から {distanceStr}
+          </span>
+        )}
         {restaurant.visitTypes.map((vt) => (
           <span
             key={vt}
@@ -251,18 +264,28 @@ export default function RestaurantCard({
         </p>
       </div>
 
-      {/* 食べログ */}
-      {restaurant.tabelogUrl && (
+      {/* 食べログ + Google Maps */}
+      <div className="flex flex-wrap gap-2">
+        {restaurant.tabelogUrl && (
+          <a
+            href={restaurant.tabelogUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ivory-50 border border-ivory-200 text-shu-500 text-[11px] font-medium rounded-lg hover:bg-shu-500/5 hover:border-shu-500/30 transition-colors"
+          >
+            食べログで見る
+            <span className="font-cormorant italic">›</span>
+          </a>
+        )}
         <a
-          href={restaurant.tabelogUrl}
+          href={googleMapsUrl(restaurant)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ivory-50 border border-ivory-200 text-shu-500 text-[11px] font-medium rounded-lg hover:bg-shu-500/5 hover:border-shu-500/30 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-ivory-50 border border-ivory-200 text-forest-700 text-[11px] font-medium rounded-lg hover:bg-forest-700/5 hover:border-forest-700/30 transition-colors"
         >
-          食べログで見る
-          <span className="font-cormorant italic">›</span>
+          📍 Google Maps
         </a>
-      )}
+      </div>
     </article>
   );
 }
