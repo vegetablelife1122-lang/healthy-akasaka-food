@@ -253,39 +253,39 @@ export default function FilterForm({ filters, onChange, onSubmit, hasLocation = 
           )}
         </div>
 
-        {/* Distance filter（現在地取得済みの時だけ表示） */}
-        {hasLocation && (
-          <div>
-            <div className="flex items-baseline gap-2 mb-2">
-              <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500">Distance · 現在地からの距離</div>
-              {filters.maxDistanceMeters !== null && (
-                <span className="text-forest-800 font-medium text-sm">
-                  {filters.maxDistanceMeters >= 1000
-                    ? `${(filters.maxDistanceMeters / 1000).toFixed(1)}km`
-                    : `${filters.maxDistanceMeters}m`} 以内
-                </span>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-1.5 mb-3">
+        {/* Distance filter */}
+        <div>
+          <div className="flex items-baseline gap-2 mb-2">
+            <div className="text-[10px] tracking-[0.2em] uppercase text-sumi-500">Distance · 現在地からの距離</div>
+            {filters.maxDistanceMeters !== null && (
+              <span className="text-forest-800 font-medium text-sm">
+                {filters.maxDistanceMeters >= 1000
+                  ? `${(filters.maxDistanceMeters / 1000).toFixed(1)}km`
+                  : `${filters.maxDistanceMeters}m`} 以内
+              </span>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            <button
+              type="button"
+              onClick={() => update("maxDistanceMeters", null)}
+              className={`chip chip-sm ${filters.maxDistanceMeters === null ? "chip-active" : ""}`}
+            >
+              指定なし
+            </button>
+            {DISTANCE_PRESETS.map((d) => (
               <button
                 type="button"
-                onClick={() => update("maxDistanceMeters", null)}
-                className={`chip chip-sm ${filters.maxDistanceMeters === null ? "chip-active" : ""}`}
+                key={d}
+                onClick={() => update("maxDistanceMeters", d)}
+                className={`chip chip-sm ${filters.maxDistanceMeters === d ? "chip-active" : ""}`}
               >
-                指定なし
+                {d >= 1000 ? `${d / 1000}km` : `${d}m`}
               </button>
-              {DISTANCE_PRESETS.map((d) => (
-                <button
-                  type="button"
-                  key={d}
-                  onClick={() => update("maxDistanceMeters", d)}
-                  className={`chip chip-sm ${filters.maxDistanceMeters === d ? "chip-active" : ""}`}
-                >
-                  {d >= 1000 ? `${d / 1000}km` : `${d}m`}
-                </button>
-              ))}
-            </div>
-            {filters.maxDistanceMeters !== null && (
+            ))}
+          </div>
+          {filters.maxDistanceMeters !== null && (
+            <>
               <input
                 type="range"
                 min={100}
@@ -295,9 +295,14 @@ export default function FilterForm({ filters, onChange, onSubmit, hasLocation = 
                 onChange={(e) => update("maxDistanceMeters", Number(e.target.value))}
                 className="w-full accent-forest-700"
               />
-            )}
-          </div>
-        )}
+              {!hasLocation && (
+                <p className="text-[11px] text-amber-600 mt-1.5">
+                  📍 距離フィルターを使うには「現在地から近い順にする」を押してください
+                </p>
+              )}
+            </>
+          )}
+        </div>
 
         {/* Open now toggle */}
         <div>
