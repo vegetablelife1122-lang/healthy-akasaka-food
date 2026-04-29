@@ -181,7 +181,6 @@ export default function RestaurantCard({
           <div className="flex items-center gap-1">
             <StarRow score={restaurant.healthScore} />
           </div>
-          <div className="text-[10px] text-sumi-500 mt-0.5">{healthScoreLabel(restaurant.healthScore)}</div>
         </div>
       </div>
 
