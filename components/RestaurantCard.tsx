@@ -26,19 +26,44 @@ const VISIT_TYPE_COLORS: Record<string, string> = {
   "お酒メイン": "bg-red-100 text-red-700",
 };
 
+function getRankBadgeStyle(rank: number): string {
+  if (rank === 1) return "bg-amber-500 text-white shadow-sm ring-2 ring-amber-300 ring-offset-1";
+  if (rank === 2) return "bg-slate-400 text-white shadow-sm";
+  if (rank === 3) return "bg-orange-500 text-white shadow-sm";
+  return "bg-emerald-700 text-white";
+}
+
+function getLeftBorderColor(healthScore: number, isSelected: boolean, isFavorite: boolean): string {
+  if (isSelected) return "border-l-emerald-500";
+  if (isFavorite) return "border-l-amber-400";
+  if (healthScore >= 5) return "border-l-emerald-500";
+  if (healthScore >= 4) return "border-l-teal-400";
+  if (healthScore >= 3) return "border-l-gray-300";
+  return "border-l-gray-200";
+}
+
+function getCalorieColor(cal: number): string {
+  if (cal === 0) return "text-gray-500";
+  if (cal <= 600) return "text-emerald-600";
+  if (cal <= 1000) return "text-amber-600";
+  return "text-red-500";
+}
+
 export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = false, onToggleFavorite }: RestaurantCardProps) {
   const { restaurant, reason, isRelaxed } = ranked;
   const peakWarnings = getPeakHourWarnings(restaurant);
 
   return (
     <div
-      className={`bg-white rounded-2xl shadow-md p-4 border-2 transition-all ${
-        isSelected ? "border-green-500 ring-2 ring-green-200" : isFavorite ? "border-yellow-400 ring-2 ring-yellow-100" : "border-transparent"
+      className={`bg-white rounded-2xl shadow-sm p-4 border-l-4 transition-all ${
+        getLeftBorderColor(restaurant.healthScore, isSelected, isFavorite)
+      } ${
+        isSelected ? "ring-2 ring-emerald-300" : isFavorite ? "ring-2 ring-amber-200" : ""
       }`}
     >
       {/* Rank badge + name + favorite */}
       <div className="flex items-start gap-2 mb-2">
-        <span className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-800 text-white flex items-center justify-center text-xs font-bold shadow">
+        <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${getRankBadgeStyle(rank)}`}>
           {rank}
         </span>
         <div className="flex-1 min-w-0">
@@ -61,12 +86,12 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
         )}
       </div>
 
-      {/* Area + Genre + Walking + Visit types — one flex-wrap row */}
+      {/* Area + Genre + Walking + Visit types */}
       <div className="flex flex-wrap gap-1.5 mb-2">
         <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
           {restaurant.area}
         </span>
-        <span className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded-full font-medium border border-green-200">
+        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs rounded-full font-medium border border-emerald-100">
           {restaurant.genre}
         </span>
         <span className="px-2 py-0.5 bg-gray-50 text-gray-500 text-xs rounded-full">
@@ -82,7 +107,7 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
         ))}
       </div>
 
-      {/* Budget — inline, readable size */}
+      {/* Budget */}
       <div className="mb-1 text-sm">
         <span className="text-gray-400 text-xs">予算 </span>
         {restaurant.budgetLunch ? (
@@ -92,10 +117,15 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
         )}
       </div>
 
-      {/* Calories + Health score — compact secondary row */}
+      {/* Calories + Health score */}
       <div className="flex gap-3 mb-2 text-xs text-gray-500">
-        <span>カロリー <span className="text-gray-700 font-medium">{formatCalories(restaurant.estimatedCalories)}</span></span>
-        <span>健康 <span className="text-yellow-500 font-medium">{healthScoreLabel(restaurant.healthScore)}</span></span>
+        <span>
+          カロリー{" "}
+          <span className={`font-semibold ${getCalorieColor(restaurant.estimatedCalories)}`}>
+            {formatCalories(restaurant.estimatedCalories)}
+          </span>
+        </span>
+        <span>健康 <span className="text-amber-500 font-medium">{healthScoreLabel(restaurant.healthScore)}</span></span>
       </div>
 
       {/* Health tags */}
@@ -124,7 +154,7 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
         </div>
       )}
 
-      {/* Description — 2-line clamp, readable size */}
+      {/* Description */}
       <p className="text-sm text-gray-600 mb-2 leading-snug line-clamp-2">{restaurant.description}</p>
 
       {/* Photo */}
@@ -139,7 +169,7 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
       )}
 
       {/* Address + Hours */}
-      <div className="mb-1.5 text-xs text-gray-500 space-y-0.5">
+      <div className="mb-1.5 text-xs text-gray-400 space-y-0.5">
         <p>📍 {restaurant.address}</p>
         <p>🕐 {restaurant.openingHours}</p>
       </div>
@@ -156,9 +186,9 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
       )}
 
       {/* Reason */}
-      <div className="bg-green-50 rounded-lg px-3 py-2 border border-green-100 mb-1.5">
-        <p className="text-xs text-gray-400 mb-0.5">選ばれた理由</p>
-        <p className="text-sm text-green-800 font-medium line-clamp-2">{reason}</p>
+      <div className="bg-emerald-50 rounded-lg px-3 py-2 border border-emerald-100 mb-1.5">
+        <p className="text-xs text-emerald-500 font-semibold mb-0.5">選ばれた理由</p>
+        <p className="text-sm text-emerald-800 font-medium line-clamp-2">{reason}</p>
       </div>
 
       {/* Tabelog link */}
@@ -167,7 +197,7 @@ export default function RestaurantCard({ ranked, rank, isSelected, isFavorite = 
           href={restaurant.tabelogUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 border border-red-200 text-red-600 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors"
+          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 border border-red-100 text-red-500 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors"
         >
           🍽️ 食べログで見る →
         </a>

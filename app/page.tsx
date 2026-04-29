@@ -55,6 +55,7 @@ const DEFAULT_FILTERS: Filters = {
   area: "",
   visitType: "",
   maxCalories: null,
+  maxBudget: null,
   genre: "",
   drink: "",
   preferHealthy: false,
@@ -130,7 +131,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-[#f2f8f3]">
       {/* Header */}
       <header className="relative text-white overflow-hidden shadow-lg">
         {/* 背景フード写真 */}
@@ -138,7 +139,7 @@ export default function HomePage() {
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=1400&q=80')",
+              "url('https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?auto=format&fit=crop&w=1400&q=80')",
           }}
         />
         {/* グラデーションオーバーレイ */}
@@ -217,20 +218,21 @@ export default function HomePage() {
         {/* Results */}
         {hasSearched && (
           <section ref={resultsRef}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-bold text-gray-800 whitespace-nowrap">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-1 h-6 bg-emerald-600 rounded-full flex-shrink-0" />
+              <h2 className="text-base font-bold text-gray-700 whitespace-nowrap">
                 健康を意識したおすすめ候補
               </h2>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">{results.length}件</span>
+              <div className="flex items-center gap-2 ml-auto">
+                <span className="text-xs text-gray-400 bg-white px-2 py-0.5 rounded-full shadow-sm">{results.length}件</span>
                 {favorites.size > 0 && (
                   <button
                     type="button"
                     onClick={() => setShowFavoritesOnly((v) => !v)}
                     className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                       showFavoritesOnly
-                        ? "bg-yellow-400 text-white"
-                        : "bg-yellow-50 text-yellow-600 border border-yellow-300"
+                        ? "bg-amber-400 text-white shadow-sm"
+                        : "bg-white text-amber-600 border border-amber-200 shadow-sm"
                     }`}
                   >
                     🌟 お気に入り {favorites.size}件
@@ -272,9 +274,10 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={handleDecide}
-                  className="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-black py-4 px-6 rounded-xl text-lg transition-colors shadow-lg hover:shadow-xl tracking-wide"
+                  className="w-full bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 text-white font-black py-5 px-6 rounded-2xl text-xl transition-all shadow-lg hover:shadow-xl tracking-wide flex items-center justify-center gap-2"
                 >
-                  今日の1店を決める！
+                  <span>🎯</span>
+                  <span>今日の1店を決める！</span>
                 </button>
                 <p className="text-center text-xs text-gray-400 mt-2">
                   上位8件からランダムに1店を選びます
@@ -374,9 +377,13 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center py-8 text-xs text-gray-400 border-t border-gray-200 mt-8">
-        <p>健康を気にする人のための赤坂外食決定機</p>
-        <p className="mt-1">掲載情報はサンプルデータです</p>
+      <footer className="mt-8 bg-white border-t border-gray-100 py-8 text-center">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <span className="text-emerald-600 text-lg">🌿</span>
+          <p className="text-sm font-bold text-gray-600 tracking-wide">赤坂外食決定機</p>
+        </div>
+        <p className="text-xs text-gray-400">健康を気にする人のための赤坂外食ガイド</p>
+        <p className="text-xs text-gray-300 mt-1">掲載情報はサンプルデータです</p>
       </footer>
     </main>
   );

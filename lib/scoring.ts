@@ -1,6 +1,6 @@
 import type { Restaurant, Filters, RankedRestaurant } from "./types";
 import { SCORE_WEIGHTS, MAX_RESULTS, MIN_RESULTS, CALORIE_RELAX_MARGIN } from "./constants";
-import { normalizeForSearch, isOpenNow } from "./utils";
+import { normalizeForSearch, isOpenNow, parseBudgetLower, estimateCaloriesForScene } from "./utils";
 
 function scoreRestaurant(restaurant: Restaurant, filters: Filters, relaxCalories: boolean): number {
   let score = 0;
@@ -23,10 +23,12 @@ function scoreRestaurant(restaurant: Restaurant, filters: Filters, relaxCalories
   }
 
   if (filters.maxCalories !== null) {
+    const isLunch = filters.visitType === "ランチ";
+    const effectiveCalories = estimateCaloriesForScene(restaurant.estimatedCalories, isLunch);
     const limit = relaxCalories
       ? filters.maxCalories + CALORIE_RELAX_MARGIN
       : filters.maxCalories;
-    if (restaurant.estimatedCalories <= limit) {
+    if (effectiveCalories <= limit) {
       score += relaxCalories ? SCORE_WEIGHTS.CALORIE_RELAXED : SCORE_WEIGHTS.CALORIE_OK;
     }
   }
@@ -107,9 +109,34 @@ export function rankRestaurants(
   restaurants: Restaurant[],
   filters: Filters
 ): RankedRestaurant[] {
-  const candidates = filters.openNow
-    ? restaurants.filter((r) => isOpenNow(r.openingHours))
+  let candidates = filters.genre
+    ? restaurants.filter((r) => r.genre === filters.genre)
     : restaurants;
+
+  if (filters.openNow) {
+    candidates = candidates.filter((r) => isOpenNow(r.openingHours));
+  }
+
+  if (filters.maxCalories !== null) {
+    const isLunch = filters.visitType === "ランチ";
+    candidates = candidates.filter((r) => {
+      const effectiveCalories = estimateCaloriesForScene(r.estimatedCalories, isLunch);
+      return effectiveCalories <= filters.maxCalories! + CALORIE_RELAX_MARGIN;
+    });
+  }
+
+  if (filters.maxBudget !== null) {
+    candidates = candidates.filter((r) => {
+      // ランチ選択時はbudgetLunchを優先、なければbudgetで判定
+      const budgetStr = filters.visitType === "ランチ" && r.budgetLunch
+        ? r.budgetLunch
+        : r.budget;
+      const lower = parseBudgetLower(budgetStr);
+      // 下限が不明な場合は除外しない
+      if (lower === null) return true;
+      return lower <= filters.maxBudget!;
+    });
+  }
 
   const strictScores = candidates.map((r) => ({
     restaurant: r,

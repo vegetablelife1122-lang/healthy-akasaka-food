@@ -6,7 +6,7 @@ export const VISIT_TYPES: VisitType[] = ["ランチ", "ディナー", "軽く飲
 
 export const GENRES: Genre[] = [
   "和食", "洋食", "イタリアン", "中華", "焼肉",
-  "居酒屋", "ラーメン", "カフェ", "バー", "その他",
+  "居酒屋", "ラーメン", "カフェ", "バー",
 ];
 
 export const DRINKS: Drink[] = [
@@ -15,6 +15,8 @@ export const DRINKS: Drink[] = [
 ];
 
 export const CALORIE_PRESETS = [500, 700, 900, 1200, 1500] as const;
+
+export const BUDGET_PRESETS = [1000, 2000, 3000, 5000, 10000] as const;
 
 export const SCORE_WEIGHTS = {
   NAME_MATCH: 30,

@@ -11,9 +11,7 @@ export type Genre =
   | "居酒屋"
   | "ラーメン"
   | "カフェ"
-  | "バー"
-  | "ワインバー"
-  | "その他";
+  | "バー";
 
 export type Drink =
   | "ビール"
@@ -60,6 +58,7 @@ export interface Filters {
   area: Area | "";
   visitType: VisitType | "";
   maxCalories: number | null;
+  maxBudget: number | null;
   genre: Genre | "";
   drink: Drink | "";
   preferHealthy: boolean;

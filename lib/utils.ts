@@ -92,6 +92,18 @@ function parseTimeRanges(text: string): [number, number][] {
   return ranges;
 }
 
+// ランチ時の推定カロリー（ディナーの約70%）
+export function estimateCaloriesForScene(calories: number, isLunch: boolean): number {
+  return isLunch ? Math.round(calories * 0.7) : calories;
+}
+
+// "¥1,000〜¥1,999" → 1000 (下限値をパース)
+export function parseBudgetLower(budgetStr: string): number | null {
+  const m = budgetStr.match(/¥([\d,]+)/);
+  if (!m) return null;
+  return parseInt(m[1].replace(/,/g, ""));
+}
+
 export function isOpenNow(openingHours: string, now: Date = new Date()): boolean {
   if (!openingHours) return true;
   const currentDay = now.getDay();
